@@ -44,7 +44,7 @@ export type Screen =
   | 'market-prices'
   | 'weather-forecast'
   | 'disease-detection'
-  | 'disease-detection-new'
+  | 'disease-detection-new' // This is the screen we are navigating to
   | 'soil-test'
   | 'soil-test-request'
   | 'soil-analysis'
@@ -69,8 +69,8 @@ export type Screen =
 export interface Language {
   code: string;
   name: string;
-  nativeName: string; // The missing property
-  flag: string;      // The other missing property
+  nativeName: string; 
+  flag: string;      
 }
 
 export type User = {
@@ -126,8 +126,6 @@ export default function App() {
 
   const handleLanguageSelect = (language: Language) => {
     setSelectedLanguage(language);
-    // If we're on the initial language selection, go to location permission
-    // Otherwise, just update the language and stay on current screen
     if (currentScreen === 'language-selection') {
       setCurrentScreen('location-permission');
     }
@@ -135,7 +133,6 @@ export default function App() {
 
   const handleLanguageChange = (language: Language) => {
     setSelectedLanguage(language);
-    // Update user's preferred language if user is logged in
     if (user) {
       setUser({
         ...user,
@@ -157,7 +154,6 @@ export default function App() {
   };
 
   const handleLoginSuccess = () => {
-    // Create a mock user for demo
     const mockUser = {
       name: selectedLanguage?.code === 'hi' ? 'राम शर्मा' : 'Ram Sharma',
       phone: '+91 9876543210',
@@ -169,7 +165,6 @@ export default function App() {
   };
 
   const handleRegistrationComplete = (userData: User) => {
-    // Ensure the user data includes the selected language
     const updatedUserData = {
       ...userData,
       preferredLanguage: selectedLanguage?.code || userData.preferredLanguage || 'en'
@@ -192,8 +187,10 @@ export default function App() {
   const handleLogoutConfirm = () => {
     setUser(null);
     setSelectedLanguage(null);
-    setCurrentScreen('splash'); // Changed from 'language-selection' to 'splash'
+    setCurrentScreen('splash');
   };
+
+
 
   const handleUpdateUser = (updatedUser: User) => {
     setUser(updatedUser);
@@ -214,14 +211,12 @@ export default function App() {
     <div 
       className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 relative"
       style={{
-        // Use a CSS gradient or solid color instead of the problematic image
         background: 'linear-gradient(to bottom, #f0fdf4, #dcfce7)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat'
       }}
     >
-      {/* Background overlay for opacity control */}
       <div 
         className="absolute inset-0 bg-gradient-to-b from-green-50 to-green-100"
         style={{ opacity: 0.85 }}
@@ -311,7 +306,7 @@ export default function App() {
           <LogoutConfirmation 
             language={selectedLanguage}
             onConfirm={handleLogoutConfirm}
-            onCancel={() => setCurrentScreen('my-account')} // This now correctly navigates back
+            onCancel={() => setCurrentScreen('my-account')}
           />
         )}
         
@@ -347,6 +342,16 @@ export default function App() {
           />
         )}
         
+        {/* *** THIS IS THE FIX *** */}
+        {/* Added the condition to render the new disease detection screen */}
+        {currentScreen === 'disease-detection-new' && (
+          <DiseaseDetectionNew 
+            selectedLanguage={selectedLanguage}
+            onNavigate={handleNavigate}
+            onLanguageChange={handleLanguageChange}
+          />
+        )}
+
         {currentScreen === 'manual-entries' && (
           <ManualEntriesPage 
             selectedLanguage={selectedLanguage}
