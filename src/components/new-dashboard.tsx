@@ -48,10 +48,9 @@ export function NewDashboard({ selectedLanguage, user, onNavigate, onLanguageCha
 
   // This function would be called when the scan button is clicked
   const handleScanClick = () => {
-    // You can navigate to a new screen for scanning, e.g., onNavigate('scan')
-    console.log("Scan button clicked!");
-    // Example of navigation:
-    // onNavigate('scan'); 
+    // *** THIS IS THE FIX ***
+    // Navigate to the disease detection screen.
+    onNavigate('disease-detection-new'); 
   };
 
   const renderActiveTab = () => {
